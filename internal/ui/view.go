@@ -13,5 +13,5 @@ func (m Model) View() string {
 		return fmt.Sprintf("%s%s", m.loader.View(), "loading...")
 	}
 
-	return lipgloss.NewStyle().Bold(true).Render("Gokedex")
+	return lipgloss.NewStyle().Foreground(lipgloss.Color("#ffffff")).Bold(true).Render(fmt.Sprintf("%d", m.pokemon.Count))
 }

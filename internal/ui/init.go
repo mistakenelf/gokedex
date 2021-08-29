@@ -5,5 +5,5 @@ import (
 )
 
 func (m Model) Init() tea.Cmd {
-	return nil
+	return loadPokemon
 }
