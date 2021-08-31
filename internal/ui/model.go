@@ -1,14 +1,14 @@
 package ui
 
-import "github.com/charmbracelet/bubbles/spinner"
+import (
+	"github.com/knipferrc/gokedex/internal/pokemon"
 
-type Pokemon struct {
-	Count int `json:"count"`
-}
+	"github.com/charmbracelet/bubbles/spinner"
+)
 
 type Model struct {
 	loader  spinner.Model
-	pokemon Pokemon
+	pokemon pokemon.Model
 	err     error
 	ready   bool
 }
@@ -16,7 +16,7 @@ type Model struct {
 func NewModel() Model {
 	return Model{
 		loader:  spinner.NewModel(),
-		pokemon: Pokemon{},
+		pokemon: pokemon.Model{},
 		err:     nil,
 		ready:   false,
 	}

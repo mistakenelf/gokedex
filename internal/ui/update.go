@@ -1,11 +1,14 @@
 package ui
 
-import tea "github.com/charmbracelet/bubbletea"
+import (
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/knipferrc/gokedex/internal/pokemon"
+)
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case pokemonMsg:
-		m.pokemon = Pokemon(msg)
+		m.pokemon.SetContent(pokemon.Pokemon(msg))
 	case errMsg:
 		m.err = msg
 	case tea.WindowSizeMsg:
