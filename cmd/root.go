@@ -26,7 +26,7 @@ var rootCmd = &cobra.Command{
 		// Initialize new app.
 		p := tea.NewProgram(m, opts...)
 		if err := p.Start(); err != nil {
-			log.Fatal("Failed to start fm", err)
+			log.Fatal("Failed to start gokedex", err)
 			os.Exit(1)
 		}
 	},
