@@ -31,10 +31,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "ctrl+c":
 			return m, tea.Quit
 
-		case "m":
+		case "right":
 			return m, m.loadNewPokemon(m.pokemon.Content.Next)
 
-		case "l":
+		case "left":
 			return m, m.loadNewPokemon(m.pokemon.Content.Previous)
 		}
 	}

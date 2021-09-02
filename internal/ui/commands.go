@@ -72,6 +72,8 @@ func loadInitialPokemonData() tea.Msg {
 			Name:    detail.Name,
 			ID:      detail.ID,
 			Sprites: pokemon.Sprites{FrontDefault: pokemonImageString},
+			Stats:   detail.Stats,
+			Order:   detail.Order,
 		})
 	}
 
@@ -144,10 +146,14 @@ func (m Model) loadNewPokemon(url string) tea.Cmd {
 
 			pokemonImageString, _ := pokemon.ImageToString(20, 20, m)
 
+			log.Fatal(detail.Stats)
+
 			finalDetails = append(finalDetails, pokemon.PokemonDetails{
 				Name:    detail.Name,
 				ID:      detail.ID,
 				Sprites: pokemon.Sprites{FrontDefault: pokemonImageString},
+				Stats:   detail.Stats,
+				Order:   detail.Order,
 			})
 		}
 

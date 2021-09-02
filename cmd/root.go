@@ -24,6 +24,9 @@ var rootCmd = &cobra.Command{
 		// Always append alt screen program option.
 		opts = append(opts, tea.WithAltScreen())
 
+		// Append mouse support.
+		opts = append(opts, tea.WithMouseAllMotion())
+
 		// Initialize new app.
 		p := tea.NewProgram(m, opts...)
 		if err := p.Start(); err != nil {

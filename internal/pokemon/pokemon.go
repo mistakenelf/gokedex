@@ -15,9 +15,9 @@ type Stat struct {
 }
 
 type Stats struct {
-	BaseStat int `json:"base_stat"`
-	Effort   int `json:"effort"`
-	Stat     Stat
+	BaseStat int  `json:"base_stat"`
+	Effort   int  `json:"effort"`
+	Stat     Stat `json:"stat"`
 }
 
 type Sprites struct {
@@ -26,19 +26,19 @@ type Sprites struct {
 }
 
 type PokemonDetails struct {
-	ID      string `json:"id"`
-	Name    string `json:"name"`
-	URL     string `json:"url"`
-	Order   int    `json:"order"`
-	Sprites Sprites
-	Stats   []Stats
+	ID      string  `json:"id"`
+	Name    string  `json:"name"`
+	URL     string  `json:"url"`
+	Order   int     `json:"order"`
+	Sprites Sprites `json:"sprites"`
+	Stats   []Stats `json:"stats"`
 }
 
 type Pokemon struct {
-	Count    int    `json:"count"`
-	Next     string `json:"next"`
-	Previous string `json:"previous"`
-	Results  []PokemonDetails
+	Count    int              `json:"count"`
+	Next     string           `json:"next"`
+	Previous string           `json:"previous"`
+	Results  []PokemonDetails `json:"results"`
 }
 
 type Model struct {
@@ -77,7 +77,12 @@ func (m Model) View() string {
 	pokemonList := ""
 
 	for _, pokemon := range m.Content.Results {
-		pokemonList += fmt.Sprintf("%s\n%s\n", pokemon.Name, pokemon.Sprites.FrontDefault)
+		name := lipgloss.NewStyle().PaddingRight(2).Render(pokemon.Name)
+		hp := fmt.Sprintf("HP (%d)", pokemon.Stats[0].BaseStat)
+		header := lipgloss.JoinHorizontal(lipgloss.Top, name, hp)
+		image := pokemon.Sprites.FrontDefault
+
+		pokemonList += fmt.Sprintf("%s\n%s\n\n", header, image)
 	}
 
 	return pokemonList
