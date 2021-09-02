@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/knipferrc/gokedex/internal/constants"
 	"github.com/knipferrc/gokedex/internal/ui"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -14,7 +15,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:     "gokedex",
 	Short:   "Gokedex is a pokedex for your terminal",
-	Version: "0.0.1",
+	Version: constants.AppVersion,
 	Args:    cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		m := ui.NewModel()

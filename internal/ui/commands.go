@@ -22,7 +22,7 @@ func loadInitialPokemonData() tea.Msg {
 		Timeout: 10 * time.Second,
 	}
 
-	res, err := c.Get(constants.API_URL)
+	res, err := c.Get(constants.ApiUrl)
 	if err != nil {
 		return errMsg{err}
 	}
@@ -89,7 +89,7 @@ func (m Model) loadNewPokemon(url string) tea.Cmd {
 	return func() tea.Msg {
 		apiUrl := ""
 		if url == "" {
-			apiUrl = constants.API_URL
+			apiUrl = constants.ApiUrl
 		} else {
 			apiUrl = url
 		}

@@ -1,6 +1,7 @@
 package constants
 
 const (
-	API_URL = "https://pokeapi.co/api/v2/pokemon?limit=3"
-	WHITE   = "#FFFFFF"
+	ApiUrl     = "https://pokeapi.co/api/v2/pokemon?limit=3"
+	White      = "#FFFFFF"
+	AppVersion = "0.0.1"
 )

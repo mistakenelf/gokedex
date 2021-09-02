@@ -16,7 +16,7 @@ func (m Model) View() string {
 	}
 
 	return lipgloss.NewStyle().
-		Foreground(lipgloss.Color(constants.WHITE)).
+		Foreground(lipgloss.Color(constants.White)).
 		Bold(true).
 		Render(m.viewport.View())
 }
