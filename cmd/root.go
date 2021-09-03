@@ -21,6 +21,19 @@ var rootCmd = &cobra.Command{
 		m := ui.NewModel()
 		var opts []tea.ProgramOption
 
+		f, err := tea.LogToFile("debug.log", "debug")
+		if err != nil {
+			log.Fatal(err)
+			os.Exit(1)
+		}
+
+		defer func() {
+			if err = f.Close(); err != nil {
+				log.Fatal(err)
+				os.Exit(1)
+			}
+		}()
+
 		// Always append alt screen program option.
 		opts = append(opts, tea.WithAltScreen())
 
