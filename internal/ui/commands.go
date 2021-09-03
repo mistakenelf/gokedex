@@ -34,8 +34,8 @@ func loadInitialPokemonData() tea.Msg {
 
 	var responseObject pokemon.Pokemon
 	var detailResponseObject pokemon.PokemonDetails
-	var combinedDetails = make([]pokemon.PokemonDetails, 0)
 	var finalDetails = make([]pokemon.PokemonDetails, 0)
+	var stats = make([]pokemon.Stats, 0)
 
 	json.Unmarshal(responseData, &responseObject)
 
@@ -52,11 +52,8 @@ func loadInitialPokemonData() tea.Msg {
 		}
 
 		json.Unmarshal(pokemonDetailsData, &detailResponseObject)
-		combinedDetails = append(combinedDetails, detailResponseObject)
-	}
 
-	for _, detail := range combinedDetails {
-		response, err := http.Get(detail.Sprites.FrontDefault)
+		response, err := http.Get(detailResponseObject.Sprites.FrontDefault)
 		if err != nil {
 			return errMsg{err}
 		}
@@ -69,11 +66,11 @@ func loadInitialPokemonData() tea.Msg {
 		pokemonImageString, _ := pokemon.ImageToString(20, 20, m)
 
 		finalDetails = append(finalDetails, pokemon.PokemonDetails{
-			Name:    detail.Name,
-			ID:      detail.ID,
+			Name:    detailResponseObject.Name,
+			ID:      detailResponseObject.ID,
 			Sprites: pokemon.Sprites{FrontDefault: pokemonImageString},
-			Stats:   detail.Stats,
-			Order:   detail.Order,
+			Stats:   append(stats, detailResponseObject.Stats...),
+			Order:   detailResponseObject.Order,
 		})
 	}
 
@@ -112,8 +109,8 @@ func (m Model) loadNewPokemon(url string) tea.Cmd {
 
 		var responseObject pokemon.Pokemon
 		var detailResponseObject pokemon.PokemonDetails
-		var combinedDetails = make([]pokemon.PokemonDetails, 0)
 		var finalDetails = make([]pokemon.PokemonDetails, 0)
+		var stats = make([]pokemon.Stats, 0)
 
 		json.Unmarshal(responseData, &responseObject)
 
@@ -130,11 +127,8 @@ func (m Model) loadNewPokemon(url string) tea.Cmd {
 			}
 
 			json.Unmarshal(pokemonDetailsData, &detailResponseObject)
-			combinedDetails = append(combinedDetails, detailResponseObject)
-		}
 
-		for _, detail := range combinedDetails {
-			response, err := http.Get(detail.Sprites.FrontDefault)
+			response, err := http.Get(detailResponseObject.Sprites.FrontDefault)
 			if err != nil {
 				return errMsg{err}
 			}
@@ -146,14 +140,12 @@ func (m Model) loadNewPokemon(url string) tea.Cmd {
 
 			pokemonImageString, _ := pokemon.ImageToString(20, 20, m)
 
-			log.Fatal(detail.Stats)
-
 			finalDetails = append(finalDetails, pokemon.PokemonDetails{
-				Name:    detail.Name,
-				ID:      detail.ID,
+				Name:    detailResponseObject.Name,
+				ID:      detailResponseObject.ID,
 				Sprites: pokemon.Sprites{FrontDefault: pokemonImageString},
-				Stats:   detail.Stats,
-				Order:   detail.Order,
+				Stats:   append(stats, detailResponseObject.Stats...),
+				Order:   detailResponseObject.Order,
 			})
 		}
 
