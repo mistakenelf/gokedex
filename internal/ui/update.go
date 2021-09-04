@@ -32,10 +32,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 
 		case "right":
-			return m, m.loadNewPokemon(m.pokemon.Content.Next)
+			return m, m.getPokemon(m.pokemon.Content.Next)
 
 		case "left":
-			return m, m.loadNewPokemon(m.pokemon.Content.Previous)
+			return m, m.getPokemon(m.pokemon.Content.Previous)
 		}
 	}
 

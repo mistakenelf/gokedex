@@ -9,7 +9,7 @@ func (m Model) Init() tea.Cmd {
 	var cmds []tea.Cmd
 
 	cmds = append(cmds, spinner.Tick)
-	cmds = append(cmds, loadInitialPokemonData)
+	cmds = append(cmds, m.getPokemon(""))
 
 	return tea.Batch(cmds...)
 }

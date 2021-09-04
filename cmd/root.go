@@ -21,6 +21,7 @@ var rootCmd = &cobra.Command{
 		m := ui.NewModel()
 		var opts []tea.ProgramOption
 
+		// Enable debugging.
 		f, err := tea.LogToFile("debug.log", "debug")
 		if err != nil {
 			log.Fatal(err)

@@ -17,74 +17,7 @@ import (
 type pokemonMsg pokemon.Pokemon
 type errMsg struct{ error }
 
-func loadInitialPokemonData() tea.Msg {
-	c := &http.Client{
-		Timeout: 10 * time.Second,
-	}
-
-	res, err := c.Get(constants.ApiUrl)
-	if err != nil {
-		return errMsg{err}
-	}
-
-	responseData, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var responseObject pokemon.Pokemon
-	var detailResponseObject pokemon.PokemonDetails
-	var finalDetails = make([]pokemon.PokemonDetails, 0)
-	var stats = make([]pokemon.Stats, 0)
-
-	json.Unmarshal(responseData, &responseObject)
-
-	// Get details for each pokemon and add to responseObject.
-	for _, pkmon := range responseObject.Results {
-		pokemonDetails, err := c.Get(pkmon.URL)
-		if err != nil {
-			return errMsg{err}
-		}
-
-		pokemonDetailsData, err := ioutil.ReadAll(pokemonDetails.Body)
-		if err != nil {
-			return errMsg{err}
-		}
-
-		json.Unmarshal(pokemonDetailsData, &detailResponseObject)
-
-		response, err := http.Get(detailResponseObject.Sprites.FrontDefault)
-		if err != nil {
-			return errMsg{err}
-		}
-
-		m, err := png.Decode(response.Body)
-		if err != nil {
-			return errMsg{err}
-		}
-
-		pokemonImageString, _ := pokemon.ImageToString(20, 20, m)
-
-		finalDetails = append(finalDetails, pokemon.PokemonDetails{
-			Name:    detailResponseObject.Name,
-			ID:      detailResponseObject.ID,
-			Sprites: pokemon.Sprites{FrontDefault: pokemonImageString},
-			Stats:   append(stats, detailResponseObject.Stats...),
-			Order:   detailResponseObject.Order,
-		})
-	}
-
-	finalRes := pokemon.Pokemon{
-		Count:    responseObject.Count,
-		Next:     responseObject.Next,
-		Previous: responseObject.Previous,
-		Results:  finalDetails,
-	}
-
-	return pokemonMsg(finalRes)
-}
-
-func (m Model) loadNewPokemon(url string) tea.Cmd {
+func (m Model) getPokemon(url string) tea.Cmd {
 	return func() tea.Msg {
 		apiUrl := ""
 		if url == "" {
@@ -97,6 +30,7 @@ func (m Model) loadNewPokemon(url string) tea.Cmd {
 			Timeout: 10 * time.Second,
 		}
 
+		// Get initial listing of pokemon.
 		res, err := c.Get(apiUrl)
 		if err != nil {
 			return errMsg{err}
@@ -107,15 +41,15 @@ func (m Model) loadNewPokemon(url string) tea.Cmd {
 			log.Fatal(err)
 		}
 
-		var responseObject pokemon.Pokemon
-		var detailResponseObject pokemon.PokemonDetails
-		var finalDetails = make([]pokemon.PokemonDetails, 0)
+		var pokemonListResponse pokemon.Pokemon
+		var pokemonDetailResponse pokemon.PokemonDetails
+		var pokemonListing = make([]pokemon.PokemonDetails, 0)
 		var stats = make([]pokemon.Stats, 0)
 
-		json.Unmarshal(responseData, &responseObject)
+		json.Unmarshal(responseData, &pokemonListResponse)
 
-		// Get details for each pokemon and add to responseObject.
-		for _, pkmon := range responseObject.Results {
+		// Get details for each pokemon and add to pokemonDetailResponse.
+		for _, pkmon := range pokemonListResponse.Results {
 			pokemonDetails, err := c.Get(pkmon.URL)
 			if err != nil {
 				return errMsg{err}
@@ -126,36 +60,39 @@ func (m Model) loadNewPokemon(url string) tea.Cmd {
 				return errMsg{err}
 			}
 
-			json.Unmarshal(pokemonDetailsData, &detailResponseObject)
+			json.Unmarshal(pokemonDetailsData, &pokemonDetailResponse)
 
-			response, err := http.Get(detailResponseObject.Sprites.FrontDefault)
+			//Get the front sprite of the pokemon.
+			response, err := http.Get(pokemonDetailResponse.Sprites.FrontDefault)
 			if err != nil {
 				return errMsg{err}
 			}
 
+			// Decode the front sprite.
 			m, err := png.Decode(response.Body)
 			if err != nil {
 				return errMsg{err}
 			}
 
-			pokemonImageString, _ := pokemon.ImageToString(20, 20, m)
+			// Convert the image to a string.
+			pokemonFrontImage, _ := pokemon.ImageToString(20, 20, m)
 
-			finalDetails = append(finalDetails, pokemon.PokemonDetails{
-				Name:    detailResponseObject.Name,
-				ID:      detailResponseObject.ID,
-				Sprites: pokemon.Sprites{FrontDefault: pokemonImageString},
-				Stats:   append(stats, detailResponseObject.Stats...),
-				Order:   detailResponseObject.Order,
+			pokemonListing = append(pokemonListing, pokemon.PokemonDetails{
+				Name:    pokemonDetailResponse.Name,
+				ID:      pokemonDetailResponse.ID,
+				Sprites: pokemon.Sprites{FrontDefault: pokemonFrontImage},
+				Stats:   append(stats, pokemonDetailResponse.Stats...),
+				Order:   pokemonDetailResponse.Order,
 			})
 		}
 
-		finalRes := pokemon.Pokemon{
-			Count:    responseObject.Count,
-			Next:     responseObject.Next,
-			Previous: responseObject.Previous,
-			Results:  finalDetails,
+		pokemonList := pokemon.Pokemon{
+			Count:    pokemonListResponse.Count,
+			Next:     pokemonListResponse.Next,
+			Previous: pokemonListResponse.Previous,
+			Results:  pokemonListing,
 		}
 
-		return pokemonMsg(finalRes)
+		return pokemonMsg(pokemonList)
 	}
 }
