@@ -3,6 +3,7 @@ package ui
 import (
 	"github.com/knipferrc/gokedex/internal/pokemon"
 
+	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -19,6 +20,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.viewport.Height = msg.Height
 		m.viewport.Width = msg.Width
+		m.help.Width = msg.Width
 		m.viewport.SetContent(m.pokemon.View())
 
 		if !m.ready {
@@ -26,15 +28,16 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 	case tea.KeyMsg:
-		switch msg.String() {
-		// Exit Gokedex.
-		case "ctrl+c":
+		switch {
+		case key.Matches(msg, m.keys.Quit):
 			return m, tea.Quit
+		case key.Matches(msg, m.keys.Help):
+			m.help.ShowAll = !m.help.ShowAll
 
-		case "right":
+			return m, nil
+		case key.Matches(msg, m.keys.Right):
 			return m, m.getPokemon(m.pokemon.Content.Next)
-
-		case "left":
+		case key.Matches(msg, m.keys.Left):
 			return m, m.getPokemon(m.pokemon.Content.Previous)
 		}
 	}
