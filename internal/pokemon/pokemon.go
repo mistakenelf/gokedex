@@ -80,10 +80,10 @@ func (m Model) View() string {
 	pokemonList := ""
 
 	for _, pokemon := range m.Content.Results {
-		name := lipgloss.NewStyle().PaddingRight(2).Render(pokemon.Name)
-		hp := fmt.Sprintf("HP (%d)", pokemon.Stats[0].BaseStat)
-		header := lipgloss.JoinHorizontal(lipgloss.Top, name, hp)
 		image := pokemon.Sprites.FrontDefault
+		hp := fmt.Sprintf("HP (%d)", pokemon.Stats[0].BaseStat)
+		name := lipgloss.NewStyle().Width(lipgloss.Width(image) - lipgloss.Width(hp)).Render(pokemon.Name)
+		header := lipgloss.JoinHorizontal(lipgloss.Top, name, hp)
 
 		pokemonList += fmt.Sprintf("%s\n%s\n\n", header, image)
 	}
