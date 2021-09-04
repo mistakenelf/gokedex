@@ -35,13 +35,14 @@ func (k keyMap) FullHelp() [][]key.Binding {
 }
 
 type Model struct {
-	keys     keyMap
-	help     help.Model
-	loader   spinner.Model
-	pokemon  pokemon.Model
-	viewport viewport.Model
-	err      error
-	ready    bool
+	keys        keyMap
+	help        help.Model
+	loader      spinner.Model
+	pokemon     pokemon.Model
+	viewport    viewport.Model
+	loadingMore bool
+	err         error
+	ready       bool
 }
 
 func NewModel() Model {
@@ -81,12 +82,13 @@ func NewModel() Model {
 	}
 
 	return Model{
-		keys:     keys,
-		help:     h,
-		loader:   l,
-		pokemon:  pokemon.Model{},
-		viewport: viewport.Model{},
-		err:      nil,
-		ready:    false,
+		keys:        keys,
+		help:        h,
+		loader:      l,
+		pokemon:     pokemon.Model{},
+		viewport:    viewport.Model{},
+		loadingMore: false,
+		err:         nil,
+		ready:       false,
 	}
 }

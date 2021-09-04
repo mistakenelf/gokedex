@@ -11,7 +11,7 @@ import (
 // View returns a string representation of the entire application UI.
 func (m Model) View() string {
 	// If the viewport is not ready or we have no pokemon to display, return a spinner.
-	if !m.ready || len(m.pokemon.Content.Results) == 0 {
+	if !m.ready || len(m.pokemon.Content.Results) == 0 || m.loadingMore {
 		return fmt.Sprintf("%s%s", m.loader.View(), "loading...")
 	}
 

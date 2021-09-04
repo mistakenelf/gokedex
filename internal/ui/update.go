@@ -13,6 +13,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	switch msg := msg.(type) {
 	case pokemonMsg:
+		m.loadingMore = false
 		m.pokemon.SetContent(pokemon.Pokemon(msg))
 		m.viewport.SetContent(m.pokemon.View())
 	case errMsg:
@@ -36,8 +37,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			return m, nil
 		case key.Matches(msg, m.keys.Right):
+			m.loadingMore = true
 			return m, m.getPokemon(m.pokemon.Content.Next)
 		case key.Matches(msg, m.keys.Left):
+			m.loadingMore = true
 			return m, m.getPokemon(m.pokemon.Content.Previous)
 		}
 	}
