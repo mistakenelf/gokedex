@@ -63,13 +63,13 @@ func (m Model) getPokemon(url string) tea.Cmd {
 			json.Unmarshal(pokemonDetailsData, &pokemonDetailResponse)
 
 			//Get the front sprite of the pokemon.
-			response, err := http.Get(pokemonDetailResponse.Sprites.FrontDefault)
+			frontImageResponse, err := http.Get(pokemonDetailResponse.Sprites.FrontDefault)
 			if err != nil {
 				return errMsg{err}
 			}
 
 			// Decode the front sprite.
-			m, err := png.Decode(response.Body)
+			m, err := png.Decode(frontImageResponse.Body)
 			if err != nil {
 				return errMsg{err}
 			}
@@ -77,10 +77,25 @@ func (m Model) getPokemon(url string) tea.Cmd {
 			// Convert the image to a string.
 			pokemonFrontImage, _ := pokemon.ImageToString(20, 20, m)
 
+			//Get the back sprite of the pokemon.
+			backImageResponse, err := http.Get(pokemonDetailResponse.Sprites.BackDefault)
+			if err != nil {
+				return errMsg{err}
+			}
+
+			// Decode the front sprite.
+			b, err := png.Decode(backImageResponse.Body)
+			if err != nil {
+				return errMsg{err}
+			}
+
+			// Convert the image to a string.
+			pokemonBackImage, _ := pokemon.ImageToString(20, 20, b)
+
 			pokemonListing = append(pokemonListing, pokemon.PokemonDetails{
 				Name:    pokemonDetailResponse.Name,
 				ID:      pokemonDetailResponse.ID,
-				Sprites: pokemon.Sprites{FrontDefault: pokemonFrontImage},
+				Sprites: pokemon.Sprites{FrontDefault: pokemonFrontImage, BackDefault: pokemonBackImage},
 				Stats:   append(stats, pokemonDetailResponse.Stats...),
 				Order:   pokemonDetailResponse.Order,
 			})

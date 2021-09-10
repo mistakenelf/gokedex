@@ -42,11 +42,18 @@ type Pokemon struct {
 }
 
 type Model struct {
-	Content Pokemon
+	Content  Pokemon
+	ShowBack bool
 }
 
+// SetContent sets the content of the pokemon.
 func (m *Model) SetContent(content Pokemon) {
 	m.Content = content
+}
+
+// ToggleImage toggles between the front and back sprites.
+func (m *Model) ToggleImage(showBack bool) {
+	m.ShowBack = showBack
 }
 
 // ImageToString converts an image to a string.
@@ -81,6 +88,11 @@ func (m Model) View() string {
 
 	for _, pokemon := range m.Content.Results {
 		image := pokemon.Sprites.FrontDefault
+
+		if m.ShowBack {
+			image = pokemon.Sprites.BackDefault
+		}
+
 		hp := fmt.Sprintf("HP (%d)", pokemon.Stats[0].BaseStat)
 		name := lipgloss.NewStyle().Width(lipgloss.Width(image) - lipgloss.Width(hp)).Render(pokemon.Name)
 		header := lipgloss.JoinHorizontal(lipgloss.Top, name, hp)

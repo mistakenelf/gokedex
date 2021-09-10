@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"github.com/knipferrc/gokedex/internal/constants"
 	"github.com/knipferrc/gokedex/internal/pokemon"
 
 	"github.com/charmbracelet/bubbles/help"
@@ -12,25 +13,26 @@ import (
 
 // keyMap struct contains all keybindings.
 type keyMap struct {
-	Help  key.Binding
-	Up    key.Binding
-	Down  key.Binding
-	Left  key.Binding
-	Right key.Binding
-	Quit  key.Binding
+	Help        key.Binding
+	Up          key.Binding
+	Down        key.Binding
+	Left        key.Binding
+	Right       key.Binding
+	ToggleImage key.Binding
+	Quit        key.Binding
 }
 
 // ShortHelp returns keybindings to be shown in the mini help view. It's part
 // of the key.Map interface.
 func (k keyMap) ShortHelp() []key.Binding {
-	return []key.Binding{k.Help, k.Up, k.Down, k.Left, k.Right, k.Quit}
+	return []key.Binding{k.Help, k.Up, k.Down, k.Left, k.Right, k.ToggleImage, k.Quit}
 }
 
 // FullHelp returns keybindings for the expanded help view. It's part of the
 // key.Map interface.
 func (k keyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
-		{k.Help, k.Up, k.Down, k.Left, k.Right, k.Quit},
+		{k.Help, k.Up, k.Down, k.Left, k.Right, k.ToggleImage, k.Quit},
 	}
 }
 
@@ -50,8 +52,8 @@ func NewModel() Model {
 	l.Spinner = spinner.Dot
 
 	h := help.NewModel()
-	h.Styles.FullKey.Foreground(lipgloss.Color("#ffffff"))
-	h.Styles.FullDesc.Foreground(lipgloss.Color("#ffffff"))
+	h.Styles.FullKey.Foreground(lipgloss.Color(constants.White))
+	h.Styles.FullDesc.Foreground(lipgloss.Color(constants.White))
 
 	// keys represents the key bindings in the app along with the help text.
 	var keys = keyMap{
@@ -74,6 +76,10 @@ func NewModel() Model {
 		Right: key.NewBinding(
 			key.WithKeys("right", "l"),
 			key.WithHelp("→/l", "move right"),
+		),
+		ToggleImage: key.NewBinding(
+			key.WithKeys("t"),
+			key.WithHelp("t", "toggle front and back sprites"),
 		),
 		Quit: key.NewBinding(
 			key.WithKeys("q", "esc", "ctrl+c"),

@@ -25,9 +25,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.viewport.SetContent(m.pokemon.View())
 
 		if !m.ready {
+			m.pokemon.ToggleImage(false)
 			m.ready = true
 		}
-
 	case tea.KeyMsg:
 		switch {
 		case key.Matches(msg, m.keys.Quit):
@@ -42,6 +42,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case key.Matches(msg, m.keys.Left):
 			m.loadingMore = true
 			return m, m.getPokemon(m.pokemon.Content.Previous)
+		case key.Matches(msg, m.keys.ToggleImage):
+			m.pokemon.ToggleImage(!m.pokemon.ShowBack)
+			m.viewport.SetContent(m.pokemon.View())
+			return m, nil
 		}
 	}
 
