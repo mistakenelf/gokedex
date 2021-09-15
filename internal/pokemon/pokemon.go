@@ -94,7 +94,9 @@ func (m Model) View() string {
 		}
 
 		hp := fmt.Sprintf("HP (%d)", pokemon.Stats[0].BaseStat)
-		name := lipgloss.NewStyle().Width(lipgloss.Width(image) - lipgloss.Width(hp)).Render(pokemon.Name)
+		name := lipgloss.NewStyle().Width(
+			lipgloss.Width(image) - lipgloss.Width(hp)).
+			Render(strings.Title(pokemon.Name))
 		header := lipgloss.JoinHorizontal(lipgloss.Top, name, hp)
 
 		pokemonList += fmt.Sprintf("%s\n%s\n\n", header, image)
