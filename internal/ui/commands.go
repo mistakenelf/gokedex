@@ -15,7 +15,7 @@ import (
 )
 
 type pokemonMsg pokemon.Pokemon
-type errMsg struct{ error }
+type errMsg error
 
 func (m Model) getPokemon(url string) tea.Cmd {
 	return func() tea.Msg {
@@ -33,7 +33,7 @@ func (m Model) getPokemon(url string) tea.Cmd {
 		// Get initial listing of pokemon.
 		res, err := c.Get(apiUrl)
 		if err != nil {
-			return errMsg{err}
+			return errMsg(err)
 		}
 
 		responseData, err := ioutil.ReadAll(res.Body)
@@ -52,12 +52,12 @@ func (m Model) getPokemon(url string) tea.Cmd {
 		for _, pkmon := range pokemonListResponse.Results {
 			pokemonDetails, err := c.Get(pkmon.URL)
 			if err != nil {
-				return errMsg{err}
+				return errMsg(err)
 			}
 
 			pokemonDetailsData, err := ioutil.ReadAll(pokemonDetails.Body)
 			if err != nil {
-				return errMsg{err}
+				return errMsg(err)
 			}
 
 			json.Unmarshal(pokemonDetailsData, &pokemonDetailResponse)
@@ -65,13 +65,13 @@ func (m Model) getPokemon(url string) tea.Cmd {
 			//Get the front sprite of the pokemon.
 			frontImageResponse, err := http.Get(pokemonDetailResponse.Sprites.FrontDefault)
 			if err != nil {
-				return errMsg{err}
+				return errMsg(err)
 			}
 
 			// Decode the front sprite.
 			m, err := png.Decode(frontImageResponse.Body)
 			if err != nil {
-				return errMsg{err}
+				return errMsg(err)
 			}
 
 			// Convert the image to a string.
@@ -80,13 +80,13 @@ func (m Model) getPokemon(url string) tea.Cmd {
 			//Get the back sprite of the pokemon.
 			backImageResponse, err := http.Get(pokemonDetailResponse.Sprites.BackDefault)
 			if err != nil {
-				return errMsg{err}
+				return errMsg(err)
 			}
 
 			// Decode the front sprite.
 			b, err := png.Decode(backImageResponse.Body)
 			if err != nil {
-				return errMsg{err}
+				return errMsg(err)
 			}
 
 			// Convert the image to a string.
