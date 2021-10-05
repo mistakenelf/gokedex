@@ -38,10 +38,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 		case key.Matches(msg, m.keys.Right):
 			m.loadingMore = true
+			m.viewport.GotoTop()
 
 			return m, m.getPokemon(m.pokemon.Content.Next)
 		case key.Matches(msg, m.keys.Left):
 			m.loadingMore = true
+			m.viewport.GotoTop()
 
 			return m, m.getPokemon(m.pokemon.Content.Previous)
 		case key.Matches(msg, m.keys.ToggleImage):
