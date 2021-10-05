@@ -1,7 +1,7 @@
 package ui
 
 import (
-	"github.com/knipferrc/gokedex/internal/constants"
+	"github.com/knipferrc/gokedex/internal/config"
 	"github.com/knipferrc/gokedex/internal/pokemon"
 
 	"github.com/charmbracelet/bubbles/help"
@@ -16,6 +16,7 @@ type Model struct {
 	loader      spinner.Model
 	pokemon     pokemon.Model
 	viewport    viewport.Model
+	appConfig   config.Config
 	loadingMore bool
 	err         error
 	ready       bool
@@ -23,13 +24,14 @@ type Model struct {
 
 func NewModel() Model {
 	keys := getDefaultKeyMap()
+	cfg := config.GetConfig()
 
 	l := spinner.NewModel()
 	l.Spinner = spinner.Dot
 
 	h := help.NewModel()
-	h.Styles.FullKey.Foreground(lipgloss.Color(constants.White))
-	h.Styles.FullDesc.Foreground(lipgloss.Color(constants.White))
+	h.Styles.FullKey.Foreground(lipgloss.Color("#ffffff"))
+	h.Styles.FullDesc.Foreground(lipgloss.Color("#ffffff"))
 
 	return Model{
 		keys:        keys,
@@ -37,6 +39,7 @@ func NewModel() Model {
 		loader:      l,
 		pokemon:     pokemon.Model{},
 		viewport:    viewport.Model{},
+		appConfig:   cfg,
 		loadingMore: false,
 		err:         nil,
 		ready:       false,
