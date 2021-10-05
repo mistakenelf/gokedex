@@ -3,8 +3,6 @@ package ui
 import (
 	"fmt"
 
-	"github.com/knipferrc/gokedex/internal/constants"
-
 	"github.com/charmbracelet/lipgloss"
 )
 
@@ -23,7 +21,7 @@ func (m Model) View() string {
 	}
 
 	return lipgloss.NewStyle().
-		Foreground(lipgloss.Color(constants.White)).
+		Foreground(lipgloss.Color("#ffffff")).
 		Bold(true).
 		Italic(true).
 		Render(currentView)

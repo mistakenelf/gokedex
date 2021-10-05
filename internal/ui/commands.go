@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/knipferrc/gokedex/internal/constants"
 	"github.com/knipferrc/gokedex/internal/pokemon"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -21,7 +20,7 @@ func (m Model) getPokemon(url string) tea.Cmd {
 	return func() tea.Msg {
 		apiUrl := ""
 		if url == "" {
-			apiUrl = constants.ApiUrl
+			apiUrl = "https://pokeapi.co/api/v2/pokemon?limit=5"
 		} else {
 			apiUrl = url
 		}
